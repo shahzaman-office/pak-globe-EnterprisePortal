@@ -1,0 +1,11 @@
+node_modules/
+.env
+.env.*
+!.env.example
+npm-debug.log*
+# Keep the bundled hotel and logo assets; avoid committing future generated files here.
+uploads/generated/
+backups/
+scratch/
+.DS_Store
+Thumbs.db

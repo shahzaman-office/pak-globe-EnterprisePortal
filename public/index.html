@@ -1,0 +1,1069 @@
+﻿<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pak Globe Travels - Unified Business Platform</title>
+  
+  <meta name="theme-color" content="#F5F8FE">
+  <meta name="mobile-web-app-capable" content="yes">
+  
+  <!-- CDNs: Fonts, Icons, Styles -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Urbanist:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  
+  <link rel="stylesheet" href="/css/olvara.css?v=20261123_branch-scope-v1">
+</head>
+<body>
+
+  <div class="glass-modal-overlay" id="hotelCostingModal" style="display:none">
+    <div class="glass-modal" style="max-width:560px">
+      <div class="glass-modal-header">
+        <div class="glass-modal-title"><i class="bi bi-calculator me-2" style="color:var(--pri)"></i>Use Hotel in Costing</div>
+        <button class="btn-icon" onclick="closeModal('hotelCostingModal')"><i class="bi bi-x-lg"></i></button>
+      </div>
+      <div class="glass-modal-body">
+        <div class="hotel-costing-selection" id="hotelCostingSelectionSummary"></div>
+        <label class="form-label mt-3">Your Existing Quotations</label>
+        <select class="form-inp" id="hotelCostingQuotationList"></select>
+        <div class="t3 mt-2" style="font-size:11px">Only quotations created by your logged-in user are shown.</div>
+      </div>
+      <div class="glass-modal-footer justify-content-between">
+        <button type="button" class="btn-ghost" onclick="closeModal('hotelCostingModal')">Cancel</button>
+        <div class="d-flex gap-2">
+          <button type="button" class="btn-ghost" id="hotelCostingExistingBtn" onclick="useHotelInExistingQuotation()"><i class="bi bi-folder2-open me-1"></i>Use Existing</button>
+          <button type="button" class="btn-pri" onclick="useHotelInNewQuotation()"><i class="bi bi-plus-lg me-1"></i>New Quotation</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       1. LOGIN PAGE (#lp) - BRANDED STAFF SIGN-IN
+       ======================================================================== -->
+  <div id="lp">
+    <div class="lcard">
+      
+      <!-- Brand Panel (Left) -->
+      <div class="lbrand">
+        <div>
+          <div class="lbrand-logo">
+            <div class="lbrand-icon" id="loginBrandMark"><i class="bi bi-moon-fill" aria-hidden="true"></i></div>
+            <div>
+              <div class="lbrand-title">PAK GLOBE TRAVELS</div>
+              <div class="lbrand-sub">Unified Enterprise Platform</div>
+            </div>
+          </div>
+
+          <div class="lbrand-intro">
+            <span class="lbrand-eyebrow"><i class="bi bi-globe-asia-australia" aria-hidden="true"></i> TRAVEL OPERATIONS</span>
+            <h1>Every journey,<br><span>beautifully managed.</span></h1>
+            <p>One secure workspace for hotel operations, package planning, and branch teams.</p>
+          </div>
+
+          <div class="lbrand-route" aria-label="Travel operations from Makkah to Madinah">
+            <div class="lroute-stop">
+              <span class="lroute-point"><i class="bi bi-geo-alt-fill" aria-hidden="true"></i></span>
+              <span class="lroute-city">MAKKAH</span>
+            </div>
+            <span class="lroute-line" aria-hidden="true"></span>
+            <div class="lroute-stop lroute-stop-end">
+              <span class="lroute-point lroute-point-end"><i class="bi bi-geo-alt-fill" aria-hidden="true"></i></span>
+              <span class="lroute-city">MADINAH</span>
+            </div>
+          </div>
+          
+          <div class="lbrand-feats">
+            <div class="lfeat-item">
+              <div class="lfeat-badge"><i class="bi bi-building"></i></div>
+              <div>Hotel Inventory & Supplier Rates</div>
+            </div>
+            <div class="lfeat-item">
+              <div class="lfeat-badge"><i class="bi bi-calculator"></i></div>
+              <div>Private & Group Package Costing Engine</div>
+            </div>
+            <div class="lfeat-item">
+              <div class="lfeat-badge"><i class="bi bi-diagram-3"></i></div>
+              <div>Multi-Branch Isolation & White-Labeling</div>
+            </div>
+            <div class="lfeat-item">
+              <div class="lfeat-badge"><i class="bi bi-hdd-network"></i></div>
+              <div>Self-Hosted MySQL Storage & Auto Image URLs</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="lbrand-foot">
+          <i class="bi bi-shield-check" style="color:var(--ok);font-size:16px"></i>
+          <span>Pak Globe Travels / Authorized staff access</span>
+        </div>
+      </div>
+
+      <!-- Login Form (Right) -->
+      <form class="lform" id="loginForm">
+        <div class="lform-kicker"><i class="bi bi-shield-lock" aria-hidden="true"></i> SECURE STAFF ACCESS</div>
+        <div class="lform-title">Welcome Back</div>
+        <div class="lform-sub">Sign in with your branch or head-office account</div>
+
+        <div class="form-group">
+          <label class="form-label" for="loginUser">Username</label>
+          <div class="login-input-wrap">
+            <i class="bi bi-person" aria-hidden="true"></i>
+            <input class="form-inp" id="loginUser" type="text" placeholder="Enter your username" autocomplete="username" autofocus required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="loginPass">Password</label>
+          <div class="pw-wrap">
+            <i class="bi bi-lock login-field-icon" aria-hidden="true"></i>
+            <input class="form-inp" id="loginPass" type="password" placeholder="Enter password" autocomplete="current-password" required>
+            <button class="pw-toggle" id="pwToggle" type="button" title="Show/Hide Password" aria-label="Show password" aria-pressed="false">
+              <i class="bi bi-eye" id="pwToggleIcon"></i>
+            </button>
+          </div>
+        </div>
+
+        <button class="btn-pri w-100 mt-2" id="loginBtn" type="submit">
+          <i class="bi bi-box-arrow-in-right me-2"></i>Sign In
+        </button>
+
+        <div class="login-assurance" role="note">
+          <i class="bi bi-shield-check" aria-hidden="true"></i>
+          <span>Use your organization-issued account to continue.</span>
+        </div>
+        <div class="lform-footer">PAK GLOBE TRAVELS <span>·</span> STAFF PORTAL</div>
+      </form>
+
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       2. APP SHELL (#app)
+       ======================================================================== -->
+  <div id="app">
+    
+    <!-- Mobile Sidebar Backdrop -->
+    <button id="sbOv" type="button" aria-label="Close navigation menu" onclick="closeSidebar()"></button>
+
+    <!-- Glassy Sidebar (.side) -->
+    <aside class="side" id="sidebar" aria-label="Primary navigation">
+      <div class="side-inner">
+        <div class="side-logo">
+          <div class="side-logo-icon" id="sideBrandMark"><i class="bi bi-moon-fill" aria-hidden="true"></i></div>
+          <div>
+            <div class="side-logo-txt" id="sideBrandTxt">PAK GLOBE <span>TRAVELS</span></div>
+            <div class="side-logo-sub" id="sideBrandSub">Enterprise Portal</div>
+          </div>
+        </div>
+
+        <!-- Navigation built dynamically by JS based on user permissions -->
+        <div class="side-nav" id="sideNav"></div>
+
+        <!-- User footer widget -->
+        <div class="side-user" id="sideUserWidget"></div>
+      </div>
+    </aside>
+
+    <!-- Top Bar (.tb) -->
+    <header class="tb">
+      <div class="tb-left">
+        <button class="btn-icon sidebar-toggle" id="sbToggleBtn" type="button" onclick="toggleSidebar()" title="Toggle Menu" aria-label="Open navigation menu" aria-controls="sidebar" aria-expanded="false">
+          <i class="bi bi-list fs-5"></i>
+        </button>
+        <div class="tb-search-wrap">
+          <i class="bi bi-search"></i>
+          <input class="form-inp" id="gSearch" type="search" placeholder="Quick search hotels, clients, invoice #">
+          <span class="kbd">Ctrl+K</span>
+        </div>
+      </div>
+
+      <div class="tb-right">
+        <button class="btn-pri btn-sm" onclick="nav('pvt')">
+          <i class="bi bi-plus-lg me-1"></i>New Costing
+        </button>
+        <button class="btn-icon" id="themeBtn" onclick="toggleTheme()" title="Toggle Dark/Light Mode">
+          <i class="bi bi-moon-fill"></i>
+        </button>
+        <div class="d-flex align-items-center gap-2 ps-2" style="border-left:1px solid var(--line-2)">
+          <div class="t3" style="font-size:12px">Signed in as:</div>
+          <div style="font-weight:700;font-size:12.5px;color:var(--pri)" id="tbUserName">User</div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content Area (#ct) -->
+    <main id="ct">
+      <section id="dash"     class="page-section"></section>
+      <section id="hotels"   class="page-section"></section>
+      <section id="search"   class="page-section"></section>
+      <section id="pvt"      class="page-section"></section>
+      <section id="grp"      class="page-section"></section>
+      <section id="allquot"  class="page-section"></section>
+      <section id="pendingquot" class="page-section"></section>
+      <section id="myquot" class="page-section"></section>
+      <section id="packages" class="page-section"></section>
+      <section id="queries"  class="page-section"></section>
+      <section id="vendors"  class="page-section"></section>
+      <section id="transport" class="page-section"></section>
+      <section id="import"   class="page-section"></section>
+      <section id="dedup"    class="page-section"></section>
+      <section id="users"    class="page-section"></section>
+      <section id="branches" class="page-section"></section>
+      <section id="logs"     class="page-section"></section>
+      <section id="ratelist" class="page-section"></section>
+      <section id="recycle"  class="page-section"></section>
+      <section id="backup"   class="page-section"></section>
+      <section id="settings" class="page-section"></section>
+    </main>
+
+  </div>
+
+  <!-- ========================================================================
+       3. HOTEL MODAL (#hotelModal) - HOTEL AND RATE EDITOR
+       ======================================================================== -->
+  <div class="glass-modal-overlay" id="hotelModal" style="display:none">
+    <div class="glass-modal modal-xl">
+      <div class="glass-modal-header">
+        <div class="glass-modal-title">
+          <i class="bi bi-building-gear" style="color:var(--pri);font-size:20px"></i>
+          <span id="hModalTitle">Add New Hotel</span>
+          <span class="pill pill-blue ms-2" id="hModalStatusPill">Active</span>
+        </div>
+        <button class="btn-icon" onclick="closeHotelModal()" title="Close Modal">
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+
+      <div class="glass-modal-body">
+        <!-- Modal Tabs -->
+        <div class="modal-tab-nav">
+          <button class="modal-tab-btn act" id="tabBtnProfile" onclick="switchHotelTab('profile')">
+            <i class="bi bi-info-circle me-1"></i>Hotel Profile
+          </button>
+          <button class="modal-tab-btn" id="tabBtnContracts" onclick="switchHotelTab('contracts')">
+            <i class="bi bi-tag me-1"></i>Vendor Rate Contracts (<span id="hContractTabCount">0</span>)
+          </button>
+        </div>
+
+        <input type="hidden" id="hId">
+
+        <!-- TAB 1: HOTEL PROFILE -->
+        <div id="hTabProfile">
+          <div class="row g-3">
+            <div class="col-12">
+              <div class="hotel-rate-help">
+                Hotel supplier rates and validity dates are managed in the <strong>Vendor Rate Contracts</strong> tab.
+                <button type="button" class="btn-ghost btn-sm ms-2" onclick="switchHotelTab('contracts')">Add hotel rates</button>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Hotel Name <span class="text-danger">*</span></label>
+              <input class="form-inp" id="hName" placeholder="e.g. Al Nusk Hotel" required>
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">City <span class="text-danger">*</span></label>
+              <select class="form-inp" id="hCity" required>
+                <option value="MAKKAH">MAKKAH</option>
+                <option value="MADINAH">MADINAH</option>
+                <option value="JEDDAH">JEDDAH</option>
+              </select>
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">Country</label>
+              <input class="form-inp" id="hCountry" value="Saudi Arabia">
+            </div>
+
+            <div class="col-md-4">
+              <label class="form-label">Area / Locality</label>
+              <input class="form-inp" id="hArea" placeholder="e.g. Aziziyah, Ibrahim Khalil">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Distance Label</label>
+              <input class="form-inp" id="hDist" placeholder="e.g. 400m from Haram">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Distance (Meters)</label>
+              <input class="form-inp" id="hDistMeters" type="number" placeholder="400">
+            </div>
+
+            <div class="col-md-4">
+              <label class="form-label">Stars Rating</label>
+              <select class="form-inp" id="hStars">
+                <option value="0">Standard / Economy</option>
+                <option value="1">1 Star</option>
+                <option value="2">2 Stars</option>
+                <option value="3">3 Stars</option>
+                <option value="4" selected>4 Stars</option>
+                <option value="5">5 Stars</option>
+              </select>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Free Shuttle Service</label>
+              <select class="form-inp" id="hShuttle">
+                <option value="0">No Shuttle</option>
+                <option value="1">Yes, shuttle included</option>
+              </select>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Hotel Status</label>
+              <select class="form-inp" id="hStatus">
+                <option value="active">Active (Visible)</option>
+                <option value="inactive">Inactive (Hidden)</option>
+              </select>
+            </div>
+
+            <div class="col-12">
+              <label class="form-label">Amenities (Comma-separated)</label>
+              <input class="form-inp" id="hAmenities" placeholder="WiFi, Lift, Room Service, Dining, Wheelchair accessible">
+            </div>
+
+            <div class="col-md-8">
+              <label class="form-label">Google Maps Pin / Location URL</label>
+              <input class="form-inp" id="hLocationUrl" placeholder="https://maps.google.com/?q=... (used in client vouchers)">
+            </div>
+            <div class="col-md-4"></div>
+
+            <div class="col-md-8">
+              <label class="form-label">Public Description</label>
+              <textarea class="form-inp" id="hDescription" rows="2" placeholder="Hotel overview, location highlights, guest perks..."></textarea>
+            </div>
+
+            <!-- Store an external image URL; media files are not uploaded here. -->
+            <div class="col-md-4">
+              <label class="form-label" for="hImageUrl">Hotel Image URL</label>
+              <input class="form-inp" id="hImageUrl" type="url" placeholder="https://example.com/hotel-photo.jpg">
+              <div class="t3 mt-1" style="font-size:10px">Only the external link is stored. No image files are uploaded.</div>
+            </div>
+
+            <!-- Branch Visibility -->
+            <div class="col-12">
+              <label class="form-label">Branch Visibility (Restrict to selected branches or leave all checked for shared)</label>
+              <div class="d-flex flex-wrap gap-3 p-2" id="hBranchCheckboxes" style="background:rgba(255,255,255,0.7);border:1px solid var(--glass-border);border-radius:10px">
+                <!-- Checkboxes populated dynamically -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 2: VENDOR RATE CONTRACTS -->
+        <div id="hTabContracts" style="display:none">
+          <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+            <div>
+              <span style="font-weight:700;color:var(--t1)">Vendor Rate Rows</span>
+              <div class="t3" style="font-size:11px">Enter confirmed supplier prices for each room/meal and validity period. Add separate rows when rates or dates differ.</div>
+            </div>
+            <div class="d-flex flex-wrap align-items-center gap-1">
+              <span class="pill pill-blue"><span id="hContractCount">0</span> rows</span>
+              <button type="button" class="btn-ghost btn-sm" onclick="addVContractRows(1)">Add Row</button>
+              <button type="button" class="btn-ghost btn-sm" onclick="addVContractRows(5)">+5 Rows</button>
+              <button type="button" class="btn-ghost btn-sm" onclick="addVContractRows(10)">+10 Rows</button>
+              <button type="button" class="btn-ghost btn-sm" onclick="clearVContractRows()">Clear</button>
+            </div>
+          </div>
+
+          <div class="hotel-rate-help">
+            <strong>Where do hotel rates come from?</strong>
+            Get current room/meal prices and valid check-in/check-out dates from your hotel vendor by email, WhatsApp, or contract, then enter them below. Search and costing use the selected stay dates; Friday/Saturday rates override weekday rates, and the all-days rate fills any missing day price. Rates are not fetched automatically.
+          </div>
+          <div id="vContractTbody" class="v-contract-list" aria-live="polite">
+            <!-- Each card stores a single vendor/date rate contract -->
+          </div>
+          <datalist id="vendorListDatalist"></datalist>
+          <div class="t3 mt-2" style="font-size:10px">Ctrl+Enter adds a rate row · Ctrl+D inside a row duplicates it · Tab moves between fields</div>
+        </div>
+
+      </div>
+
+      <div class="glass-modal-footer">
+        <button type="button" class="btn-ghost" onclick="closeHotelModal()">Cancel</button>
+        <button type="button" class="btn-pri" id="btnSaveHotel" onclick="saveHotelModal()">
+          <i class="bi bi-check-lg me-1"></i>Save Hotel & Rates
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       4. COPY OPTION MODAL (#copyOptModal)
+       ======================================================================== -->
+  <div class="glass-modal-overlay" id="copyOptModal" style="display:none">
+    <div class="glass-modal" style="max-width:520px">
+      <div class="glass-modal-header">
+        <div class="glass-modal-title">
+          <i class="bi bi-copy" style="color:var(--pri)"></i>
+          <span>Copy Option Data</span>
+        </div>
+        <button class="btn-icon" onclick="closeModal('copyOptModal')"><i class="bi bi-x-lg"></i></button>
+      </div>
+      <div class="glass-modal-body">
+        <p class="t2 mb-3" style="font-size:12.5px">Copy package itinerary, hotels, flights, and pricing from one option to another.</p>
+        <div class="row g-3 mb-3">
+          <div class="col-6">
+            <label class="form-label">Copy From (Source)</label>
+            <select class="form-inp" id="copyOptSource">
+              <option value="A" selected>Option A</option>
+              <option value="B">Option B</option>
+              <option value="C">Option C</option>
+            </select>
+          </div>
+          <div class="col-6">
+            <label class="form-label">Copy To (Target)</label>
+            <select class="form-inp" id="copyOptTarget">
+              <option value="A">Option A</option>
+              <option value="B" selected>Option B</option>
+              <option value="C">Option C</option>
+            </select>
+          </div>
+        </div>
+        <div class="sec-box">
+          <div class="form-label mb-2">Include in Copy:</div>
+          <div class="d-flex flex-column gap-2" style="font-size:12.5px">
+            <label class="d-flex align-items-center gap-2" style="cursor:pointer">
+              <input type="checkbox" id="cpSecHotels" checked> Hotels & Room Rates / Nights
+            </label>
+            <label class="d-flex align-items-center gap-2" style="cursor:pointer">
+              <input type="checkbox" id="cpSecFlights" checked> Flights, Sectors & Timings
+            </label>
+            <label class="d-flex align-items-center gap-2" style="cursor:pointer">
+              <input type="checkbox" id="cpSecTransport" checked> Transport Routes & Vehicles
+            </label>
+            <label class="d-flex align-items-center gap-2" style="cursor:pointer">
+              <input type="checkbox" id="cpSecVisa" checked> Visa Rates & ROE
+            </label>
+            <label class="d-flex align-items-center gap-2" style="cursor:pointer">
+              <input type="checkbox" id="cpSecPax" checked> Passenger Counts, Markups & Ticket PKR
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="glass-modal-footer">
+        <button type="button" class="btn-ghost" onclick="closeModal('copyOptModal')">Cancel</button>
+        <button type="button" class="btn-pri" onclick="executeCopyOption()">
+          <i class="bi bi-copy me-1"></i>Copy Option Now
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       5. PROPOSAL PREVIEW & VOUCHER MODAL (#proposalModal)
+       ======================================================================== -->
+  <div class="glass-modal-overlay" id="proposalModal" style="display:none">
+    <div class="glass-modal" style="max-width:920px">
+      <div class="glass-modal-header">
+        <div class="glass-modal-title">
+          <i class="bi bi-file-earmark-pdf" style="color:var(--pri)"></i>
+          <span id="proposalModalTitle">Quotation Proposal Preview</span>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+          <button class="btn-icon" onclick="closeModal('proposalModal')"><i class="bi bi-x-lg"></i></button>
+        </div>
+      </div>
+      <div class="glass-modal-body" style="background:#f8fafc;padding:24px 18px">
+        <div id="proposalPreviewBody"></div>
+      </div>
+      <div class="glass-modal-footer justify-content-between">
+        <div class="d-flex align-items-center gap-2">
+          <span class="t3" style="font-size:11.5px"><i class="bi bi-printer me-1"></i>Engine v5 Sandboxed Print</span>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+          <button type="button" class="btn-ghost" onclick="closeModal('proposalModal')">Close</button>
+          <button type="button" class="btn-pri" style="background:#25D366;border-color:#25D366;color:#fff" onclick="shareCurrentProposalWhatsApp()">
+            <i class="bi bi-whatsapp me-1"></i>WhatsApp
+          </button>
+          <button type="button" class="btn-pri" onclick="triggerProposalPrint()">
+            <i class="bi bi-printer me-1"></i>Print / Save A4 PDF
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       6. INTERNAL COSTING SHEET MODAL (#costingModal)
+       ======================================================================== -->
+  <div class="glass-modal-overlay" id="costingModal" style="display:none">
+    <div class="glass-modal" style="max-width:920px">
+      <div class="glass-modal-header">
+        <div class="glass-modal-title">
+          <i class="bi bi-calculator" style="color:#7C3AED"></i>
+          <span id="costingModalTitle">Internal Costing Breakdown Sheet</span>
+        </div>
+        <button class="btn-icon" onclick="closeModal('costingModal')"><i class="bi bi-x-lg"></i></button>
+      </div>
+      <div class="glass-modal-body" style="background:#f8fafc;padding:20px 16px">
+        <div id="costingSheetBody"></div>
+      </div>
+      <div class="glass-modal-footer">
+        <button type="button" class="btn-ghost" onclick="closeModal('costingModal')">Close</button>
+        <button type="button" class="btn-pri" style="background:#7C3AED;border-color:#7C3AED" onclick="triggerCostingPrint()">
+          <i class="bi bi-printer me-1"></i>Print Costing Sheet
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       7. BOOKING QUERY & CHAT MODAL (#queryModal)
+       ======================================================================== -->
+  <div class="glass-modal-overlay" id="queryModal" style="display:none">
+    <div class="glass-modal" style="max-width:760px">
+      <div class="glass-modal-header">
+        <div class="glass-modal-title">
+          <i class="bi bi-chat-left-dots" style="color:var(--pri)"></i>
+          <span id="qModalTitle">Booking Inquiry / Query</span>
+        </div>
+        <button class="btn-icon" onclick="closeModal('queryModal')"><i class="bi bi-x-lg"></i></button>
+      </div>
+      <div class="glass-modal-body">
+        <input type="hidden" id="qId">
+        <div class="row g-3 mb-3">
+          <div class="col-md-6">
+            <label class="form-label">Client Name</label>
+            <input class="form-inp" id="qClientName" placeholder="Client Name">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Contact / Phone</label>
+            <input class="form-inp" id="qPhone" placeholder="0300-1234567">
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">Pipeline Stage</label>
+            <select class="form-inp" id="qStatus">
+              <option value="inquire">1. Inquire / Rate Check</option>
+              <option value="checking_rates">2. Checking Rates</option>
+              <option value="proposal_sent">3. Proposal Sent</option>
+              <option value="confirm_whatsapp">4. Confirm on WhatsApp</option>
+              <option value="booked">5. Booked / Confirmed</option>
+              <option value="completed">6. Completed</option>
+              <option value="cancelled">7. Cancelled</option>
+            </select>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">Assigned Branch</label>
+            <select class="form-inp" id="qBranch"></select>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">Travel Dates</label>
+            <input class="form-inp" id="qTravelDates" placeholder="e.g. 15 Nov - 30 Nov">
+          </div>
+        </div>
+
+        <div class="sec-box">
+          <div class="sec-box-title">
+            <span>Client Notes & Chat Activity</span>
+            <span class="t3" style="font-size:11px">Real-time log</span>
+          </div>
+          <div id="qChatHistory" style="max-height:220px;overflow-y:auto;display:flex;flex-direction:column;gap:8px;padding:8px 4px;margin-bottom:12px">
+            <!-- Dynamic chat log items -->
+          </div>
+          <div class="d-flex gap-2">
+            <input class="form-inp flex-1" id="qNewMessage" placeholder="Type a client note or follow-up update..." onkeydown="if(event.key==='Enter')addQueryMessage()">
+            <button type="button" class="btn-pri" onclick="addQueryMessage()">
+              <i class="bi bi-send me-1"></i>Post
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="glass-modal-footer">
+        <button type="button" class="btn-ghost" onclick="closeModal('queryModal')">Cancel</button>
+        <button type="button" class="btn-pri" onclick="saveQueryModal()">
+          <i class="bi bi-check-lg me-1"></i>Save Inquiry Details
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       8. USER MANAGEMENT MODAL (#userModal)
+       ======================================================================== -->
+  <div class="glass-modal-overlay" id="userModal" style="display:none">
+    <div class="glass-modal" style="max-width:780px">
+      <div class="glass-modal-header">
+        <div class="glass-modal-title">
+          <i class="bi bi-person-gear" style="color:var(--pri)"></i>
+          <span id="userModalTitle">Add / Edit User</span>
+        </div>
+        <button class="btn-icon" onclick="closeModal('userModal')"><i class="bi bi-x-lg"></i></button>
+      </div>
+      <div class="glass-modal-body">
+        <input type="hidden" id="uId">
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label">Username</label>
+            <input class="form-inp" id="uUsername" placeholder="e.g. agent1">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Full Name</label>
+            <input class="form-inp" id="uFullName" placeholder="e.g. Muhammad Ali">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Email Address</label>
+            <input class="form-inp" type="email" id="uEmail" placeholder="department user email">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Department</label>
+            <select class="form-inp" id="uDepartment"><option value="">Select department</option><option value="visa">Visa</option><option value="ticket">Tickets</option><option value="transport">Transport</option><option value="hotel">Hotels</option><option value="booking">Booking</option></select>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Password <span class="t3" style="font-size:10px">(Leave blank to keep unchanged)</span></label>
+            <input class="form-inp" type="password" id="uPassword" placeholder="New password">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">User Role</label>
+            <select class="form-inp" id="uRole">
+              <option value="user">User (Standard Sales)</option>
+              <option value="branch_admin">Branch Admin (Branch Scope)</option>
+              <option value="admin">Admin (All Branches)</option>
+              <option value="superadmin">SuperAdmin (Full Unrestricted)</option>
+              <option value="editor">Editor</option>
+              <option value="viewer">Viewer</option>
+            </select>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Assigned Branch</label>
+            <select class="form-inp" id="uBranch"></select>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Account Status</label>
+            <select class="form-inp" id="uStatus">
+              <option value="active">Active</option>
+              <option value="inactive">Inactive</option>
+            </select>
+          </div>
+          
+          <!-- Granular RBAC Permissions Matrix -->
+          <div class="col-12 mt-3">
+            <div id="userRbacGlobalNotice" class="alert alert-info py-2 px-3 mb-2" style="display:none;font-size:12px;border-radius:8px">
+              <i class="bi bi-shield-check me-2" style="font-size:14px;color:var(--pri)"></i><strong>Global Administrator Role:</strong> Full role-level all-branch access is automatically granted by role policy. Granular restrictions do not apply to global accounts.
+            </div>
+            <div class="d-flex align-items-center justify-content-between mb-2">
+              <label class="form-label mb-0" style="font-weight:800;color:var(--pri)">
+                <i class="bi bi-shield-lock me-1"></i>Granular RBAC Permissions Matrix
+              </label>
+              <div class="d-flex align-items-center gap-2">
+                <button type="button" class="btn-ghost btn-sm" id="rbacCheckAllBtn" style="font-size:10px;padding:2px 8px" onclick="toggleAllRbac(true)">Check All</button>
+                <button type="button" class="btn-ghost btn-sm" id="rbacClearAllBtn" style="font-size:10px;padding:2px 8px" onclick="toggleAllRbac(false)">Clear All</button>
+              </div>
+            </div>
+
+            <div style="max-height:220px;overflow-y:auto;border:1px solid var(--glass-border);border-radius:10px;background:#fff">
+              <table class="table table-sm table-striped mb-0" style="font-size:11px;text-align:center">
+                <thead style="position:sticky;top:0;background:#f1f5f9;z-index:2">
+                  <tr>
+                    <th style="text-align:left;padding-left:8px">Module</th>
+                    <th style="width:50px">View</th>
+                    <th style="width:50px">Add</th>
+                    <th style="width:50px">Edit</th>
+                    <th style="width:50px">Delete</th>
+                    <th style="width:50px">Export</th>
+                    <th style="width:50px">Import</th>
+                  </tr>
+                </thead>
+                <tbody id="userRbacTbody">
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+      </div>
+      <div class="glass-modal-footer">
+        <button type="button" class="btn-ghost" onclick="closeModal('userModal')">Cancel</button>
+        <button type="button" class="btn-pri" onclick="saveUserModal()">
+          <i class="bi bi-check-lg me-1"></i>Save User
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Change Password Modal -->
+  <div class="glass-modal-overlay" id="changePasswordModal" style="display:none">
+    <div class="glass-modal" style="max-width:440px">
+      <div class="glass-modal-header">
+        <div class="glass-modal-title"><i class="bi bi-key me-2" style="color:var(--pri)"></i>Change Account Password</div>
+        <button class="btn-icon" onclick="closeModal('changePasswordModal')"><i class="bi bi-x-lg"></i></button>
+      </div>
+      <div class="glass-modal-body">
+        <div class="mb-3">
+          <label class="form-label" for="cpCurrentPass">Current Password <span class="text-danger">*</span></label>
+          <input class="form-inp" id="cpCurrentPass" type="password" placeholder="Enter current password" required>
+        </div>
+        <div class="mb-3">
+          <label class="form-label" for="cpNewPass">New Password <span class="text-danger">*</span></label>
+          <input class="form-inp" id="cpNewPass" type="password" placeholder="At least 6 characters" required>
+        </div>
+        <div class="mb-2">
+          <label class="form-label" for="cpConfirmPass">Confirm New Password <span class="text-danger">*</span></label>
+          <input class="form-inp" id="cpConfirmPass" type="password" placeholder="Re-enter new password" required>
+        </div>
+      </div>
+      <div class="glass-modal-footer">
+        <button type="button" class="btn-ghost" onclick="closeModal('changePasswordModal')">Cancel</button>
+        <button type="button" class="btn-pri" onclick="submitChangePassword()"><i class="bi bi-check-lg me-1"></i>Update Password</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       9. BRANCH MANAGEMENT MODAL (#branchModal)
+       ======================================================================== -->
+  <div class="glass-modal-overlay" id="branchModal" style="display:none">
+    <div class="glass-modal" style="max-width:650px">
+      <div class="glass-modal-header">
+        <div class="glass-modal-title">
+          <i class="bi bi-diagram-3" style="color:var(--pri)"></i>
+          <span id="brModalTitle">Add / Edit Branch</span>
+        </div>
+        <button class="btn-icon" onclick="closeModal('branchModal')"><i class="bi bi-x-lg"></i></button>
+      </div>
+      <div class="glass-modal-body">
+        <input type="hidden" id="brId">
+        <div class="row g-3">
+          <div class="col-md-8">
+            <label class="form-label">Branch Name</label>
+            <input class="form-inp" id="brName" placeholder="e.g. Hyderabad Branch">
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">Branch Code</label>
+            <input class="form-inp" id="brCode" placeholder="e.g. HYD">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Phone / WhatsApp</label>
+            <input class="form-inp" id="brPhone" placeholder="0310-0376111">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Email</label>
+            <input class="form-inp" id="brEmail" placeholder="info@branch.com">
+          </div>
+          <div class="col-12 branch-email-routing-box">
+            <div class="branch-email-routing-head">
+              <div>
+                <div class="form-label mb-1">Automatic Department Emails</div>
+                <div class="t3" style="font-size:11px">Approval ke baad in addresses par email jayegi. Har category mein multiple emails comma ya new line se add kar sakte hain.</div>
+              </div>
+              <label class="switch-label"><input type="checkbox" id="brEmailAutomation" checked> Enable automation</label>
+            </div>
+            <div class="row g-2 mt-1">
+              <div class="col-md-6"><label class="form-label">Hotel Emails</label><textarea class="form-inp branch-email-list" id="brEmailHotel" rows="2" placeholder="hotel1@example.com, hotel2@example.com"></textarea></div>
+              <div class="col-md-6"><label class="form-label">Visa Emails</label><textarea class="form-inp branch-email-list" id="brEmailVisa" rows="2" placeholder="visa@example.com"></textarea></div>
+              <div class="col-md-6"><label class="form-label">Ticket / Flight Emails</label><textarea class="form-inp branch-email-list" id="brEmailTicket" rows="2" placeholder="ticket@example.com"></textarea></div>
+              <div class="col-md-6"><label class="form-label">Transport Emails</label><textarea class="form-inp branch-email-list" id="brEmailTransport" rows="2" placeholder="transport@example.com"></textarea></div>
+              <div class="col-12"><label class="form-label">General Booking Emails</label><textarea class="form-inp branch-email-list" id="brEmailBooking" rows="2" placeholder="booking@example.com"></textarea></div>
+            </div>
+          </div>
+          <div class="col-12">
+            <label class="form-label">Physical Office Address</label>
+            <input class="form-inp" id="brAddress" placeholder="Full address...">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Govt. License #</label>
+            <input class="form-inp" id="brLicense" placeholder="5807">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Brand Theme Color</label>
+            <input class="form-inp" type="color" id="brColor" value="#3A94BA" style="height:38px;padding:2px">
+          </div>
+          <div class="col-12">
+            <label class="form-label" for="brTerms">Branch Quotation Terms</label>
+            <textarea class="form-inp" id="brTerms" rows="3" placeholder="Branch-specific booking terms shown on customer quotations"></textarea>
+          </div>
+          <div class="col-12">
+            <label class="form-label" for="brDisclaimer">Branch Quotation Instructions</label>
+            <textarea class="form-inp" id="brDisclaimer" rows="3" placeholder="Add branch instructions or a note for customers"></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="glass-modal-footer">
+        <button type="button" class="btn-ghost" onclick="closeModal('branchModal')">Cancel</button>
+        <button type="button" class="btn-pri" onclick="saveBranchModal()">
+          <i class="bi bi-check-lg me-1"></i>Save Branch
+        </button>
+      </div>
+    </div>
+  </div>
+
+  
+  <!-- ========================================================================
+       10. 19-COLUMN SHEETJS HOTEL IMPORTER / EXPORTER MODAL (#excelModal)
+       ======================================================================== -->
+  <div class="glass-modal-overlay" id="excelModal" style="display:none">
+    <div class="glass-modal" style="max-width:820px">
+      <div class="glass-modal-header">
+        <div class="glass-modal-title">
+          <i class="bi bi-file-earmark-spreadsheet" style="color:var(--ok)"></i>
+          <span>19-Column Excel Hotel Importer & Exporter</span>
+        </div>
+        <button class="btn-icon" onclick="closeModal('excelModal')"><i class="bi bi-x-lg"></i></button>
+      </div>
+      <div class="glass-modal-body">
+        
+        <!-- Action Row -->
+        <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3 pb-2" style="border-bottom:1px solid var(--glass-border)">
+          <div class="d-flex align-items-center gap-2">
+            <button type="button" class="btn-ghost" onclick="downloadExcelSample()">
+              <i class="bi bi-download me-1"></i>Download 19-Col Sample (.xlsx)
+            </button>
+            <button type="button" class="btn-ghost" onclick="downloadJsonSample()">
+              <i class="bi bi-filetype-json me-1"></i>Download Sample JSON
+            </button>
+          </div>
+          <button type="button" class="btn-pri" onclick="exportHotelsToExcel()">
+            <i class="bi bi-file-earmark-arrow-up me-1"></i>Export All Active Hotels
+          </button>
+        </div>
+
+        <!-- Drag & Drop Zone -->
+        <div id="excelDropZone" style="border:2px dashed var(--priBrd);border-radius:12px;padding:24px;text-align:center;background:rgba(126,200,227,0.06);cursor:pointer;transition:var(--tr)" onclick="document.getElementById('excelFileInput').click()">
+          <i class="bi bi-cloud-arrow-up" style="font-size:36px;color:var(--pri);display:block;margin-bottom:6px"></i>
+          <div style="font-weight:800;font-size:13px;color:var(--t1)">Click to upload or drag & drop 19-Column Excel file</div>
+          <div class="t3" style="font-size:11px;margin-top:2px">Supports .xlsx, .xls (Hotels, Rates, Vendors, Room Types)</div>
+          <input type="file" id="excelFileInput" accept=".xlsx,.xls,.json" style="display:none" onchange="handleExcelFileUpload(this.files[0])">
+        </div>
+
+        <!-- Live Report Output -->
+        <div id="excelReportContainer" class="mt-3" style="display:none"></div>
+
+      </div>
+      <div class="glass-modal-footer">
+        <button type="button" class="btn-ghost" onclick="closeModal('excelModal')">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       11. 8-CHARACTER HOTEL DEDUPLICATION & MERGE MODAL (#dedupModal)
+       ======================================================================== -->
+  <div class="glass-modal-overlay" id="dedupModal" style="display:none">
+    <div class="glass-modal" style="max-width:880px">
+      <div class="glass-modal-header">
+        <div class="glass-modal-title">
+          <i class="bi bi-layers-half" style="color:var(--pri)"></i>
+          <span>8-Character Hotel Deduplication & Rate Merging</span>
+        </div>
+        <button class="btn-icon" onclick="closeModal('dedupModal')"><i class="bi bi-x-lg"></i></button>
+      </div>
+      <div class="glass-modal-body">
+        
+        <div class="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">
+          <div style="font-size:11.5px;color:var(--t2)">
+            Fingerprint: <code style="background:#e2e8f0;padding:2px 6px;border-radius:4px">CITY + First 8 Alphanumeric Chars</code>
+          </div>
+          <div class="d-flex align-items-center gap-2">
+            <button type="button" class="btn-ghost" onclick="runHotelDeduplicationScan()">
+              <i class="bi bi-arrow-repeat me-1"></i>Re-Scan Now
+            </button>
+            <button type="button" class="btn-pri" onclick="autoMergeAllDuplicates()">
+              <i class="bi bi-shield-check me-1"></i>Auto-Merge All Safe
+            </button>
+          </div>
+        </div>
+
+        <div id="dedupResultsList"></div>
+
+      </div>
+      <div class="glass-modal-footer">
+        <button type="button" class="btn-ghost" onclick="closeModal('dedupModal')">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       VENDOR MODAL (Add / Edit Vendor)
+       ======================================================================== -->
+  <div class="glass-modal-overlay" id="vendorModal" style="display:none">
+    <div class="glass-modal">
+      <div class="glass-modal-header">
+        <div class="glass-modal-title">
+          <i class="bi bi-people" style="color:var(--pri);font-size:18px"></i>
+          <span id="vModalTitle">Add New Vendor</span>
+        </div>
+        <button class="btn-icon" onclick="closeModal('vendorModal')" title="Close">
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+      <div class="glass-modal-body">
+        <input type="hidden" id="vId">
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label">Vendor / Supplier Name <span class="text-danger">*</span></label>
+            <input class="form-inp" id="vName" placeholder="e.g. Al Safwa Umrah Services" required>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Contact Person</label>
+            <input class="form-inp" id="vContactPerson" placeholder="e.g. Tariq Mehmood">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Phone Number</label>
+            <input class="form-inp" id="vPhone" placeholder="+966 50 123 4567">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">WhatsApp Number</label>
+            <input class="form-inp" id="vWhatsApp" placeholder="966501234567">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Email Address</label>
+            <input class="form-inp" id="vEmail" type="email" placeholder="vendor@example.com">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Status</label>
+            <select class="form-inp" id="vStatus">
+              <option value="active">Active</option>
+              <option value="inactive">Inactive</option>
+            </select>
+          </div>
+          <div class="col-12">
+            <label class="form-label">Office Address / Location</label>
+            <input class="form-inp" id="vAddress" placeholder="e.g. Makkah Clock Tower Office #402">
+          </div>
+        </div>
+      </div>
+      <div class="glass-modal-footer">
+        <button type="button" class="btn-ghost" onclick="closeModal('vendorModal')">Cancel</button>
+        <button type="button" class="btn-pri" onclick="saveVendorModal()">
+          <i class="bi bi-check-lg me-1"></i>Save Vendor
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       TRANSPORT MODAL (Add / Edit Route & Vehicle Rate)
+       ======================================================================== -->
+  <div class="glass-modal-overlay" id="transportModal" style="display:none">
+    <div class="glass-modal">
+      <div class="glass-modal-header">
+        <div class="glass-modal-title">
+          <i class="bi bi-truck" style="color:var(--pri);font-size:18px"></i>
+          <span id="trModalTitle">Add Transport Rate</span>
+        </div>
+        <button class="btn-icon" onclick="closeModal('transportModal')" title="Close">
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+      <div class="glass-modal-body">
+        <input type="hidden" id="trId">
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label">Sector / Route <span class="text-danger">*</span></label>
+            <select class="form-inp" id="trSector" required>
+              <option value="JED-MAK">JEDDAH AIRPORT TO MAKKAH (JED-MAK)</option>
+              <option value="MAK-MED">MAKKAH TO MADINAH (MAK-MED)</option>
+              <option value="MED-JED">MADINAH TO JEDDAH AIRPORT (MED-JED)</option>
+              <option value="MED-MED">MADINAH AIRPORT TO MADINAH HOTEL</option>
+              <option value="MAK ZIYARAT">MAKKAH ZIYARAT (LOCAL SIGHTSEEING)</option>
+              <option value="MED ZIYARAT">MADINAH ZIYARAT (LOCAL SIGHTSEEING)</option>
+              <option value="FULL ROUTE">FULL UMRAH ROUTE (JED-MAK-MED-JED)</option>
+              <option value="CUSTOM">CUSTOM ROUTE</option>
+            </select>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Vehicle Type <span class="text-danger">*</span></label>
+            <select class="form-inp" id="trVehicle" required>
+              <option value="Sedan / Car (1-3 Pax)">Sedan / Car (1-3 Pax)</option>
+              <option value="GMC / Luxury SUV (1-5 Pax)">GMC / Luxury SUV (1-5 Pax)</option>
+              <option value="HiAce / Starex (1-10 Pax)">HiAce / Starex (1-10 Pax)</option>
+              <option value="Coaster (1-20 Pax)">Coaster (1-20 Pax)</option>
+              <option value="Bus (50 Pax)">Bus (50 Pax)</option>
+            </select>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Rate (SAR) <span class="text-danger">*</span></label>
+            <input class="form-inp" type="number" step="0.01" id="trRateSAR" placeholder="e.g. 250" oninput="syncTrRatePKR()" required>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Rate (PKR) <span class="t3" style="font-size:9.5px">(Auto calculated via ROE)</span></label>
+            <input class="form-inp" type="number" step="0.01" id="trRatePKR" placeholder="e.g. 19500">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Status</label>
+            <select class="form-inp" id="trStatus">
+              <option value="active">Active</option>
+              <option value="inactive">Inactive</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="glass-modal-footer">
+        <button type="button" class="btn-ghost" onclick="closeModal('transportModal')">Cancel</button>
+        <button type="button" class="btn-pri" onclick="saveTransportModal()">
+          <i class="bi bi-check-lg me-1"></i>Save Rate
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sandboxed Print Iframe for Engine v5 -->
+  <iframe id="printFrame" style="position:fixed;top:-9999px;left:-9999px;width:0;height:0;border:none;"></iframe>
+
+  <!-- QRCode Library for offline proposal QR code generation -->
+  <script src="/js/qrcode.min.js"></script>
+
+  <!-- Toast Notification Stack -->
+  <div class="glass-modal-overlay" id="packageModal" style="display:none">
+    <div class="glass-modal modal-xl">
+      <div class="glass-modal-header"><div class="glass-modal-title"><i class="bi bi-box-seam me-2" style="color:var(--pri)"></i>Create Package</div><button class="btn-icon" onclick="closeModal('packageModal')"><i class="bi bi-x-lg"></i></button></div>
+      <div class="glass-modal-body" id="packageModalBody"></div>
+      <div class="glass-modal-footer"><button class="btn-ghost" onclick="closeModal('packageModal')">Cancel</button><button class="btn-pri" onclick="savePackage()"><i class="bi bi-check-lg me-1"></i>Save Package</button></div>
+    </div>
+  </div>
+
+  <!-- Record Installment Payment Modal -->
+  <div class="glass-modal-overlay" id="packagePaymentAddModal" style="display:none">
+    <div class="glass-modal" style="max-width:480px">
+      <div class="glass-modal-header">
+        <div class="glass-modal-title"><i class="bi bi-cash-stack me-2" style="color:var(--ok)"></i>Record Installment Payment</div>
+        <button class="btn-icon" onclick="closeModal('packagePaymentAddModal')"><i class="bi bi-x-lg"></i></button>
+      </div>
+      <div class="glass-modal-body">
+        <input type="hidden" id="pkgPayPkgId">
+        <div class="mb-3 p-3" style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;font-size:13px">
+          <div>Client: <strong id="pkgPayClientName">—</strong></div>
+          <div class="mt-1">Remaining Balance: <strong class="text-danger">PKR <span id="pkgPayRemaining">0</span></strong></div>
+        </div>
+        <div class="row g-3">
+          <div class="col-12">
+            <label class="form-label">Payment Amount (PKR) <span class="text-danger">*</span></label>
+            <input class="form-inp" id="pkgPayAmount" type="number" min="1" step="0.01" placeholder="e.g. 50000" required>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Payment Date</label>
+            <input class="form-inp" id="pkgPayDate" type="date">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Payment Method</label>
+            <select class="form-inp" id="pkgPayMethod">
+              <option value="Cash">Cash</option>
+              <option value="Bank Transfer">Bank Transfer</option>
+              <option value="Online">Online / Raast</option>
+              <option value="Cheque">Cheque</option>
+            </select>
+          </div>
+          <div class="col-12">
+            <label class="form-label">Transaction ID / Reference Note</label>
+            <input class="form-inp" id="pkgPayNote" placeholder="e.g. Trx #483921 / Habib Bank">
+          </div>
+        </div>
+      </div>
+      <div class="glass-modal-footer">
+        <button type="button" class="btn-ghost" onclick="closeModal('packagePaymentAddModal')">Cancel</button>
+        <button type="button" class="btn-pri" onclick="submitPackagePayment()"><i class="bi bi-check-lg me-1"></i>Record Payment</button>
+      </div>
+    </div>
+  </div>
+  <div id="toastContainer"></div>
+
+  <!-- Full-Screen Loading Overlay -->
+  <div id="loadOverlay">
+    <div class="load-spinner"></div>
+    <div class="load-msg">Loading platform data...</div>
+  </div>
+
+  <!-- Application Script -->
+  <script src="/js/app.js?v=20261123_branch-scope-v1"></script>
+
+</body>
+</html>
